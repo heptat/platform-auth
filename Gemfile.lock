@@ -61,5 +61,6 @@ DEPENDENCIES
   rack (= 1.4.1)
   rack-flash3
   sinatra
+  sinatra-contrib
   sinatra-reloader
   unicorn
