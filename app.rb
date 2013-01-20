@@ -43,9 +43,36 @@ configure :production, :test do
   end
 end
 
+configure :development do
+  not_found do
+    erb :'404'
+  end
+end
+
 get '/' do
   content_type :json
   { :url => '/' }.to_json
 end
 
+
+post '/tokens/new' do
+  # see http://developer.github.com/v3/#client-errors
+  if params[:username].nil? ||
+     params[:password].nil? ||
+     params[:callback].nil?
+    # you only need status here because it calls not_found which stops the
+    # execution
+    # status 404
+    # but you need halt here to stop the execution
+    halt 422
+  end
+  @username = params[:username]
+  @password = params[:password]
+  @callback = params[:callback]
+
+  # TODO if username/password are correct, create a token and set it in a
+  # domain-wide cookie
+
+  redirect @callback
+end
 
