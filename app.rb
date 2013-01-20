@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'sinatra'
-require 'sinatra/json'
+# require 'sinatra/json'
 require 'mongoid'
-# require 'json'
+require 'json'
 # this is now using this https://github.com/treeder/rack-flash which is
 # installed in the Gemfile as 'rack-flash3'
 require 'rack-flash'
@@ -44,10 +44,8 @@ configure :production, :test do
 end
 
 get '/' do
-  # erb :index
-  # content_type :json
-  # { :url => '/' }.to_json
-  json :url => '/'
+  content_type :json
+  { :url => '/' }.to_json
 end
 
 
