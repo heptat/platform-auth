@@ -75,6 +75,11 @@ post '/tokens/new' do
   # TODO if username/password are correct, create a token and set it in a
   # domain-wide cookie
 
+  response.set_cookie("token",
+                      :value => "1234",
+                      :domain => ".platform.local",
+                      :path => "/")
+
   redirect @callback
 end
 
