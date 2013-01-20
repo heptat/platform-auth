@@ -28,10 +28,12 @@ configure :production do
 end
 set :mongo_logfile, File.join("log", "mongo-driver-#{settings.environment}.log")
 
-use Rack::Session::Cookie, :secret => 'thisisasecret'
-use Rack::Flash
+# we don't want to use session based cookies - in fact the auth.platform
+# doesn't need to use sessions at all
+# use Rack::Session::Cookie, :secret => 'thisisasecret'
+# enable :sessions
+# use Rack::Flash
 
-enable :sessions
 
 configure :production, :test do
   not_found do
