@@ -34,14 +34,15 @@ set :mongo_logfile, File.join("log", "mongo-driver-#{settings.environment}.log")
 # enable :sessions
 # use Rack::Flash
 
-
 configure :production, :test do
   not_found do
-    erb :'404'
+    content_type :json
+    {:error => "not-found"}.to_json
   end
 
   error do
-    erb :'500'
+    content_type :json
+    {:error => "server-error"}.to_json
   end
 end
 
@@ -90,13 +91,12 @@ post '/tokens/new' do
   @password = params[:password]
   @callback = params[:callback]
 
-  # TODO if username/password are correct, create a token and set it in a
-  # domain-wide cookie
-
   user = User.where(:username => params[:username], :password => params[:password]).first
 
+  # if username/password are correct, create a token and set it in a
+  # domain-wide cookie
   if user.nil?
-    # this needs to redirect back to the form
+    # this needs to redirect back to the form instead of a 404
     # halt 404
     response.set_cookie("error",
                         :value => "username or password incorrect",
