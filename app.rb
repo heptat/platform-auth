@@ -57,6 +57,24 @@ get '/' do
   { :url => '/' }.to_json
 end
 
+get '/tokens/:token?' do
+  logger.info(request.inspect)
+  if params["app-key"].nil? || params["app-key"] != "5555"
+    halt 422
+  end
+  token = Token.where(:value => params[:token]).first
+  if token.nil?
+    content_type :json
+    { :value => false }.to_json
+  else
+    content_type :json
+    {
+      :value => token.value,
+      :uid => token.uid,
+      :created_at => token.created_at
+    }.to_json
+  end
+end
 
 post '/tokens/new' do
   # see http://developer.github.com/v3/#client-errors
