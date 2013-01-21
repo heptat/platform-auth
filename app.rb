@@ -58,7 +58,6 @@ get '/' do
 end
 
 get '/tokens/:token?' do
-  logger.info(request.inspect)
   if params["app-key"].nil? || params["app-key"] != "5555"
     halt 422
   end
