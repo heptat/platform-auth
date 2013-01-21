@@ -9,8 +9,8 @@ require 'rack-flash'
 require 'digest/sha1'
 require 'sinatra/reloader' if :development?
 
-# require_relative 'lib/helpers'
-# Dir[File.dirname(__FILE__) + '/models/*'].each {|file| require_relative file }
+require_relative 'lib/helpers'
+Dir[File.dirname(__FILE__) + '/models/*'].each {|file| require_relative file }
 
 Mongoid.load!("config/mongoid.yml")
 
@@ -47,7 +47,8 @@ end
 
 configure :development do
   not_found do
-    erb :'404'
+    content_type :json
+    {:error => "not-found"}.to_json
   end
 end
 
@@ -75,8 +76,21 @@ post '/tokens/new' do
   # TODO if username/password are correct, create a token and set it in a
   # domain-wide cookie
 
+  user = User.where(:username => params[:username], :password => params[:password]).first
+
+  if user.nil?
+    # this needs to redirect back to the form
+    # halt 404
+    response.set_cookie("error",
+                        :value => "username or password incorrect",
+                        :domain => ".platform.local",
+                        :path => "/")
+    redirect request.referrer
+  end
+
+  token = generate_token(user)
   response.set_cookie("token",
-                      :value => "1234",
+                      :value => token,
                       :domain => ".platform.local",
                       :path => "/")
 
