@@ -114,3 +114,17 @@ post '/tokens/new' do
   redirect @callback
 end
 
+delete '/tokens/:token?' do
+  if params["app-key"].nil? || params["app-key"] != "5555"
+    halt 422
+  end
+  token = Token.where(:value => params[:token]).first
+  if token.nil?
+    halt 404
+  end
+  token.delete
+  content_type :json
+  { :result => true }.to_json
+end
+
+
