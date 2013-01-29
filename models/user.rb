@@ -11,6 +11,7 @@ class User
   validates_length_of         :username, :within => 3..20
   validates_presence_of       :password
   validates_length_of         :password, :within => 3..20
+  validates_presence_of       :uid
 
   def to_param
     self.uid
