@@ -59,7 +59,7 @@ get '/' do
 end
 
 get '/tokens/:token?' do
-  if params["app-key"].nil? || params["app-key"] != "5555"
+  if params["app-key"].nil? || (params["app-key"] != "5555" && params["app-key"] != "8888")
     halt 422
   end
   token = Token.where(:value => params[:token]).first
@@ -115,7 +115,7 @@ post '/tokens/new' do
 end
 
 delete '/tokens/:token?' do
-  if params["app-key"].nil? || params["app-key"] != "5555"
+  if params["app-key"].nil? || (params["app-key"] != "5555" && params["app-key"] != "8888")
     halt 422
   end
   token = Token.where(:value => params[:token]).first
